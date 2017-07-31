@@ -1,0 +1,33 @@
+---
+- name: Ensure Redmine database migrated
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake db:migrate
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  when: src_results.changed
+
+- name: Ensure Redmine plugins migrated
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src && bin/rake
+    redmine:plugins:migrate
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  register: plugins_migration
+  when: plugins_presence.changed or plugins_absence.changed
+
+- name: Ensure Redmine assets compiled
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake assets:precompile
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  when: src_results.changed or plugins_migration.changed
+
+- name: Ensure Redmine cache clear
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake tmp:clear
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  when: src_results.changed or plugins_migration.changed

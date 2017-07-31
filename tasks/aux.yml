@@ -1,0 +1,63 @@
+---
+- name: Ensure plugins directory
+  file:
+    path: "{{ redmine_source_path }}/plugins"
+    state: directory
+    mode: 0755
+
+- name: Getting list of currently installed plugins
+  shell: "ls -1 {{ redmine_source_path }}/plugins"
+  register: redmine_plugins_installed
+  changed_when: false
+
+- name: Ensure absence of unused plugins
+  file:
+    path: "{{ redmine_source_path }}/plugins/{{ item }}"
+    state: absent
+  with_items: "{{ redmine_plugins_installed.stdout_lines|difference(['README']) }}"
+  when: item not in redmine_plugins_enabled
+  register: plugins_absence
+
+- name: Ensure enabled plugins present
+  with_items: "{{ redmine_plugins_enabled }}"
+  loop_control:
+    loop_var: plugin
+  include_role:
+    name: gitpush-deploy
+  vars:
+    gitpush_local_repo_path: "redmine_plugins/{{ plugin }}/.git"
+    gitpush_repo_path: "{{ redmine_source_path }}/plugins/{{ plugin }}/.git"
+    gitpush_workdir_path: "{{ redmine_source_path }}/plugins/{{ plugin }}"
+  register: plugins_presence
+
+- name: Ensure plugins owner is correct
+  file:
+    path: "{{ redmine_source_path }}/plugins"
+    recurse: true
+  when: plugins_presence.changed or plugins_absence.changed
+
+- name: Getting list of currently installed themes
+  shell: "ls -1 {{ redmine_source_path }}/public/themes"
+  register: redmine_themes_installed
+  changed_when: false
+
+- name: Ensure absence of unused themes
+  file:
+    path: "{{ redmine_source_path }}/public/themes/{{ item }}"
+    state: absent
+  with_items: "{{ redmine_themes_installed.stdout_lines|difference(['alternate', 'classic', 'README']) }}"
+  register: themes_absence
+  when: item not in redmine_themes_repositories|map(attribute='name')
+
+- name: Ensure themes present
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ redmine_source_path }}/public/themes/{{ item.name }}"
+  register: themes_presence
+  with_items: "{{ redmine_themes_repositories }}"
+
+- name: Ensure themes owner is correct
+  file:
+    path: "{{ redmine_source_path }}/public/themes"
+    recurse: true
+  when: themes_presence.changed or themes_absence.changed

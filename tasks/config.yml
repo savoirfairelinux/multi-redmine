@@ -1,0 +1,41 @@
+---
+- name: Ensure app database config
+  template:
+    src: templates/database.yml.j2
+    dest: "{{ redmine_config_path }}/database.yml"
+
+- name: Ensure app config
+  template:
+    src: templates/configuration.yml.j2
+    dest: "{{ redmine_config_path }}/configuration.yml"
+
+- name: Ensure database Gemfile packages present
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && rbenv rehash && cd src && bundler install
+  register: results
+  changed_when: "'Installing' in results.stdout"
+  args:
+    executable: /bin/bash
+
+- name: Check if app secret key base file is present
+  stat:
+    path: "{{ redmine_config_path }}/secrets.yml"
+  register: stat_secret_key_base
+
+- name: Generate app secret key base
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src && rake secret
+  changed_when: false
+  args:
+    executable: /bin/bash
+  register: secret_key_base
+  when: not stat_secret_key_base.stat.exists
+
+- name: Ensure app secret key base
+  copy:
+    content: |
+      {{ redmine_rails_environment }}:
+        secret_key_base: {{ secret_key_base.stdout }}
+    dest: "{{ redmine_config_path }}/secrets.yml"
+    mode: u=rw,g=r,o=
+  when: not stat_secret_key_base.stat.exists

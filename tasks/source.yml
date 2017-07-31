@@ -1,0 +1,9 @@
+---
+- name: Ensure Redmine src
+  git:
+    repo: "{{ redmine_repo_git }}"
+    dest: "{{ redmine_source_path }}"
+    version: "{{ redmine_version }}"
+    force: true
+  register: src_results
+  changed_when: src_results.after != src_results.before

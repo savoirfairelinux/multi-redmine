@@ -1,0 +1,61 @@
+---
+# call to execute to restart appserver
+redmine_handler_appserver_restart: ""
+
+# redmine version to provision
+redmine_version: 3.4-stable
+redmine_repo_git: https://github.com/redmine/redmine.git
+
+# redmine root path
+redmine_home_path: "/opt/redmine"
+
+# redmine path information
+redmine_source_path: "{{ redmine_home_path }}/src"
+redmine_config_path: "{{ redmine_source_path }}/config"
+redmine_cache_path: "{{ redmine_home_path }}/cache"
+redmine_storage_path: "{{ redmine_home_path }}/files"
+redmine_static_path: "{{ redmine_source_path }}/public"
+redmine_gemfile_lock_path: "{{ redmine_home_path }}/Gemfile.lock"
+
+# the bash rbenv activation script
+redmine_rbenv_activation_script: "{{ redmine_home_path }}/.activate"
+
+# rails environment : 'production' or 'development'
+redmine_rails_environment: production
+
+# redmine enabled plugins
+redmine_plugins_enabled: []
+
+# repositories of themes
+redmine_themes_repositories: []
+
+# the username on which redmine will be ran
+redmine_username: ""
+
+# redmine database configuration
+redmine_database_host: 127.0.0.1
+redmine_database_port: 5432
+redmine_database_schema: "{{ redmine_username }}"
+redmine_database_username: "{{ redmine_username }}"
+redmine_database_password: whatever
+redmine_database_encoding: utf8
+
+# redmine email delivery configuration
+redmine_mail_smtp_enable: false
+redmine_mail_smtp_host: null
+redmine_mail_smtp_port: null
+redmine_mail_smtp_starttls: false # true or false
+redmine_mail_smtp_authentication: null # cram_md5, login, plain or null
+redmine_mail_smtp_domain: null
+redmine_mail_smtp_username: null
+redmine_mail_smtp_password: null
+
+# redmine inbound mail configuration
+redmine_mail_pop3_enable: false
+redmine_mail_pop3_host: null
+redmine_mail_pop3_port: null
+redmine_mail_pop3_username: null
+redmine_mail_pop3_password: null
+redmine_mail_pop3_apop: false # true or false
+redmine_mail_pop3_ssl: false # true or false
+redmine_mail_pop3_refresh_minutes: 1

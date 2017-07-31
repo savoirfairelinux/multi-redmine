@@ -1,0 +1,8 @@
+{{ redmine_rails_environment }}:
+  adapter: postgresql
+  database: {{ redmine_database_schema }}
+  host: {{ redmine_database_host }}
+  port: {{ redmine_database_port }}
+  username: {{ redmine_database_username }}
+  password: '{{ redmine_database_password }}'
+  encoding: {{ redmine_database_encoding }}

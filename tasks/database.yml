@@ -1,0 +1,18 @@
+---
+- name: Ensure database user
+  postgresql_user:
+    name: "{{ redmine_database_username }}"
+    password: "{{ redmine_database_password }}"
+
+- name: Ensure database schema
+  postgresql_db:
+    name: "{{ redmine_database_schema }}"
+    owner: "{{ redmine_database_username }}"
+
+- name: Ensure database u=rw,o=
+  postgresql_privs:
+    db: "{{ redmine_database_schema }}"
+    role: PUBLIC
+    type: database
+    priv: ALL
+    state: absent

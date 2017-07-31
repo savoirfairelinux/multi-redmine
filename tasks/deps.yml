@@ -1,0 +1,8 @@
+---
+- name: Ensure Gemfile packages present
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && rbenv rehash && cd src && bundler install
+  register: results
+  changed_when: "'Installing' in results.stdout"
+  args:
+    executable: /bin/bash
