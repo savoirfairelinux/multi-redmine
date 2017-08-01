@@ -12,8 +12,8 @@ redmine_home_path: "/opt/redmine"
 # redmine path information
 redmine_source_path: "{{ redmine_home_path }}/src"
 redmine_config_path: "{{ redmine_source_path }}/config"
-redmine_cache_path: "{{ redmine_home_path }}/cache"
-redmine_storage_path: "{{ redmine_home_path }}/files"
+redmine_cache_path: "{{ redmine_source_path }}/cache"
+redmine_storage_path: "{{ redmine_source_path }}/files"
 redmine_static_path: "{{ redmine_source_path }}/public"
 redmine_gemfile_lock_path: "{{ redmine_home_path }}/Gemfile.lock"
 
