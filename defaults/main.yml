@@ -1,6 +1,6 @@
 ---
 # call to execute to restart appserver
-redmine_handler_appserver_restart: ""
+redmine_handler_appserver_restart: "restart appserver"
 
 # redmine version to provision
 redmine_version: 3.4-stable

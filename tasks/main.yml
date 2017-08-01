@@ -12,26 +12,21 @@
   become: true
 
 - include: tasks/source.yml
-  notify: "{{ redmin_handler_appserver_restart }}"
   become_user: "{{ redmine_username }}"
   become: true
 
 - include: tasks/aux.yml
-  notify: "{{ redmin_handler_appserver_restart }}"
   become_user: "{{ redmine_username }}"
   become: true
 
 - include: tasks/deps.yml
-  notify: "{{ redmine_handler_appserver_restart }}"
   become_user: "{{ redmine_username }}"
   become: true
 
 - include: tasks/config.yml
-  notify: "{{ redmin_handler_appserver_restart }}"
   become_user: "{{ redmine_username }}"
   become: true
 
 - include: tasks/finish.yml
-  notify: "{{ redmin_handler_appserver_restart }}"
   become_user: "{{ redmine_username }}"
   become: true

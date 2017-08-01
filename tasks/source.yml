@@ -7,3 +7,4 @@
     force: true
   register: src_results
   changed_when: src_results.after != src_results.before
+  notify: "{{ redmine_handler_appserver_restart }}"

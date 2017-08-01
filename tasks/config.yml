@@ -3,11 +3,13 @@
   template:
     src: templates/database.yml.j2
     dest: "{{ redmine_config_path }}/database.yml"
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Ensure app config
   template:
     src: templates/configuration.yml.j2
     dest: "{{ redmine_config_path }}/configuration.yml"
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Ensure database Gemfile packages present
   shell: |
@@ -16,6 +18,7 @@
   changed_when: "'Installing' in results.stdout"
   args:
     executable: /bin/bash
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Check if app secret key base file is present
   stat:
@@ -39,3 +42,4 @@
     dest: "{{ redmine_config_path }}/secrets.yml"
     mode: u=rw,g=r,o=
   when: not stat_secret_key_base.stat.exists
+  notify: "{{ redmine_handler_appserver_restart }}"

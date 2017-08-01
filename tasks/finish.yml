@@ -6,6 +6,7 @@
   environment:
     RAILS_ENV: "{{ redmine_rails_environment }}"
   when: src_results.changed
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Ensure Redmine plugins migrated
   shell: |
@@ -15,6 +16,7 @@
     RAILS_ENV: "{{ redmine_rails_environment }}"
   register: plugins_migration
   when: plugins_presence.changed or plugins_absence.changed
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Ensure Redmine assets compiled
   shell: |
@@ -23,6 +25,7 @@
   environment:
     RAILS_ENV: "{{ redmine_rails_environment }}"
   when: src_results.changed or plugins_migration.changed
+  notify: "{{ redmine_handler_appserver_restart }}"
 
 - name: Ensure Redmine cache clear
   shell: |
@@ -31,3 +34,4 @@
   environment:
     RAILS_ENV: "{{ redmine_rails_environment }}"
   when: src_results.changed or plugins_migration.changed
+  notify: "{{ redmine_handler_appserver_restart }}"
