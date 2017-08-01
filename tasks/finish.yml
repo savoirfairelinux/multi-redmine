@@ -11,7 +11,7 @@
 - name: Ensure Redmine plugins migrated
   shell: |
     . {{ redmine_rbenv_activation_script }} && cd src && bin/rake
-    redmine:plugins:migrate
+    bin/rake redmine:plugins:migrate
   environment:
     RAILS_ENV: "{{ redmine_rails_environment }}"
   register: plugins_migration
