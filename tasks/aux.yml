@@ -32,9 +32,12 @@
 
 - name: Ensure plugins owner is correct
   file:
+    owner: "{{ redmine_username }}"
+    group: "{{ redmine_username }}"
     path: "{{ redmine_source_path }}/plugins"
     recurse: true
-  when: plugins_presence.changed or plugins_absence.changed
+  when: plugins_presence.changed
+  become_user: root
 
 - name: Getting list of currently installed themes
   shell: "ls -1 {{ redmine_source_path }}/public/themes"
@@ -58,6 +61,9 @@
 
 - name: Ensure themes owner is correct
   file:
+    owner: "{{ redmine_username }}"
+    group: "{{ redmine_username }}"
     path: "{{ redmine_source_path }}/public/themes"
     recurse: true
   when: themes_presence.changed or themes_absence.changed
+  become_user: root
