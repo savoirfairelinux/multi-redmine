@@ -16,7 +16,10 @@
     state: absent
   with_items: "{{ redmine_plugins_installed.stdout_lines|difference(['README']) }}"
   when: item not in redmine_plugins_enabled
-  register: plugins_absence
+  notify:
+    - migrate plugins database
+    - compile assets
+    - clear cache
 
 - name: Ensure enabled plugins present
   with_items: "{{ redmine_plugins_enabled }}"
@@ -28,16 +31,12 @@
     gitpush_local_repo_path: "redmine_plugins/{{ plugin }}/.git"
     gitpush_repo_path: "{{ redmine_source_path }}/plugins/{{ plugin }}/.git"
     gitpush_workdir_path: "{{ redmine_source_path }}/plugins/{{ plugin }}"
+    notify:
+      - ensure ownership
+      - migrate plugins database
+      - compile assets
+      - clear cache
   register: plugins_presence
-
-- name: Ensure plugins owner is correct
-  file:
-    owner: "{{ redmine_username }}"
-    group: "{{ redmine_username }}"
-    path: "{{ redmine_source_path }}/plugins"
-    recurse: true
-  when: plugins_presence.changed
-  become_user: root
 
 - name: Getting list of currently installed themes
   shell: "ls -1 {{ redmine_source_path }}/public/themes"
@@ -49,8 +48,9 @@
     path: "{{ redmine_source_path }}/public/themes/{{ item }}"
     state: absent
   with_items: "{{ redmine_themes_installed.stdout_lines|difference(['alternate', 'classic', 'README']) }}"
-  register: themes_absence
   when: item not in redmine_themes_repositories|map(attribute='name')
+  notify:
+    - clear cache
 
 - name: Ensure themes present
   git:
@@ -58,6 +58,9 @@
     dest: "{{ redmine_source_path }}/public/themes/{{ item.name }}"
   register: themes_presence
   with_items: "{{ redmine_themes_repositories }}"
+  notify:
+    - ensure ownership
+    - clear cache
 
 - name: Ensure themes owner is correct
   file:
@@ -65,5 +68,5 @@
     group: "{{ redmine_username }}"
     path: "{{ redmine_source_path }}/public/themes"
     recurse: true
-  when: themes_presence.changed or themes_absence.changed
+  when: themes_presence.changed
   become_user: root

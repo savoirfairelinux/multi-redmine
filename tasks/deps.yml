@@ -6,4 +6,4 @@
   changed_when: "'Installing' in results.stdout"
   args:
     executable: /bin/bash
-  notify: "{{ redmine_handler_appserver_restart }}"
+  notify: clear cache

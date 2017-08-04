@@ -1,0 +1,57 @@
+---
+- name: restart appserver
+  shell: echo echo echo echo ...
+  changed_when: true
+  notify: "{{ redmine_handler_appserver_restart }}"
+  become: true
+  become_user: root
+
+- name: migrate core database
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake db:migrate
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  notify: restart appserver
+  become_user: "{{ redmine_username }}"
+  become: true
+
+- name: migrate plugins database
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake redmine:plugins:migrate
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  register: plugins_migration
+  notify: restart appserver
+  become_user: "{{ redmine_username }}"
+  become: true
+
+- name: compile assets
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake assets:precompile
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  notify: restart appserver
+  become_user: "{{ redmine_username }}"
+  become: true
+
+- name: clear cache
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake tmp:clear
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  notify: restart appserver
+  become_user: "{{ redmine_username }}"
+  become: true
+
+- name: ensure ownership
+  file:
+    owner: "{{ redmine_username }}"
+    group: "{{ redmine_username }}"
+    path: "{{ redmine_source_path }}"
+    recurse: true
+  become: true
+  become_user: root
