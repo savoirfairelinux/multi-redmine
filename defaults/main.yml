@@ -59,3 +59,21 @@ redmine_mail_pop3_password: null
 redmine_mail_pop3_apop: false # true or false
 redmine_mail_pop3_ssl: false # true or false
 redmine_mail_pop3_refresh_minutes: 1
+
+# redmine inbound mail configuration
+# using the same logic as redmine_mail_pop3 but with project
+# example :
+#
+# redmine_mail_inbound_override:
+#   - project: beers-co-inc
+#     parameters:
+#       enable: true
+#       host: null
+#       [ ... ]
+#   - project: butter-cookies-incorporated
+#     parameters:
+#       enable: true
+#       host: null
+#       [ ... ]
+#
+redmine_mail_inbound_override: []

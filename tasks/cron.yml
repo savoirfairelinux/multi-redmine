@@ -17,3 +17,23 @@
       ssl={{ redmine_mail_pop3_ssl|bool()|lower }}
       >> /dev/null
   when: redmine_mail_pop3_enable
+
+- name: Ensure inbound mail cronjob project identifier override
+  cron:
+    name: "inbound mail for {{ item.project }}"
+    user: "{{ redmine_username }}"
+    minute: "*/{{ item.parameters.refresh_minutes|default(redmine_mail_pop3_refresh_minutes) }}"
+    job: >
+      cd {{ redmine_source_path }} &&
+      {{ redmine_source_path }}/bin/rake
+      redmine:email:receive_pop3
+      RAILS_ENV={{ redmine_rails_environment }}
+      project="{{ item.project }}"
+      host="{{ item.parameters.host|default(redmine_mail_pop3_host) }}"
+      port="{{ item.parameters.port|default(redmine_mail_pop3_port) }}"
+      username="{{ item.parameters.username|default(redmine_mail_pop3_username) }}"
+      password="{{ item.parameters.password|default(redmine_mail_pop3_password) }}"
+      apop={{ item.parameters.apop|default(redmine_mail_pop3_apop)|bool()|lower }}
+      ssl={{ item.parameters.ssl|default(redmine_mail_pop3_ssl)|bool()|lower }}
+      >> /dev/null
+  with_items: "{{ redmine_mail_inbound_override }}"
