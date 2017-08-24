@@ -45,3 +45,6 @@
     mode: u=rw,g=r,o=
   when: not stat_secret_key_base.stat.exists
   notify: clear cache
+
+- include: ldap_config.yml
+  with_items: "{{ redmine_ldap_configs|default([]) }}"

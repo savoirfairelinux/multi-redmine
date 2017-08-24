@@ -59,3 +59,6 @@ redmine_mail_pop3_password: null
 redmine_mail_pop3_apop: false # true or false
 redmine_mail_pop3_ssl: false # true or false
 redmine_mail_pop3_refresh_minutes: 1
+
+# redmine ldap configurations
+redmine_ldap_configs: []
