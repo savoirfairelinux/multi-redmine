@@ -9,12 +9,12 @@ INSERT INTO auth_sources (
   onthefly_register, tls, filter
 ) VALUES (
   'AuthSourceLdap', '{{ item.redmine_ldap_name|default("LDAP") }}', '{{ item.redmine_ldap_host }}',
-  {{ item.redmine_ldap_port|default(636) }}, {{ item.redmine_ldap_account|quote|default("NULL")}},
-  {{ item.redmine_ldap_account_password|quote|default("NULL")}},
-  {{ item.redmine_ldap_base_dn }}, '{{ item.redmine_ldap_attr_login|default("uid") }}',
+  {{ item.redmine_ldap_port|default(636) }}, {{ item.redmine_ldap_username|default("NULL")}},
+  {{ item.redmine_ldap_account_password|default("NULL")}},
+  '{{ item.redmine_ldap_base_dn }}', '{{ item.redmine_ldap_attr_login|default("uid") }}',
   '{{ item.redmine_ldap_attr_firstname|default("givenName") }}',
   '{{ item.redmine_ldap_attr_lastname|default("sn") }}',
   '{{ item.redmine_ldap_attr_mail|default("mail") }}',
   {{ item.redmine_ldap_onthefly_register|default(true) }}, {{ item.redmine_ldap_tls|default(true) }},
-  {{ item.redmine_ldap_filter|quote|default("NULL") }}
+  {{ item.redmine_ldap_filter|default("NULL") }}
 );

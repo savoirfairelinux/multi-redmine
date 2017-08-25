@@ -16,3 +16,13 @@
     type: database
     priv: ALL
     state: absent
+
+- name: Migrate core database
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake db:migrate
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  notify: restart appserver
+  become_user: "{{ redmine_username }}"
+  become: true

@@ -11,8 +11,8 @@
   shell: |
     psql {{ redmine_database_schema }} -h {{ redmine_database_host }} \
     -p {{ redmine_database_port }} -U {{ redmine_database_username }} <<-EOF
-    {{ lookup("template", "config.sql.j2") }}
+    {{ lookup("template", "ldap_config.sql.j2") }}
     EOF
   environment:
     PGPASSWORD: "{{ redmine_database_password }}"
-  when: had_ldap.stdout == '0\n'
+  when: "had_ldap.stdout == '0'"
