@@ -1,6 +1,7 @@
 {{ redmine_rails_environment }}:
   email_delivery: {% if not redmine_mail_smtp_enable %}null
   {% else %}
+
     delivery_method: :smtp
     smtp_settings:
       enable_starttls_auto: {{ redmine_mail_smtp_starttls|bool()|lower }}
