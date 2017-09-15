@@ -60,6 +60,23 @@ redmine_mail_pop3_apop: false # true or false
 redmine_mail_pop3_ssl: false # true or false
 redmine_mail_pop3_refresh_minutes: 1
 
+# usage example :
+# redmine_ldap_configs:
+#   - redmine_ldap_name: Cool Inc.
+#     redmine_ldap_host: ldap.coolinc.com
+#     redmine_ldap_port: 636
+#     redmine_ldap_username: "cn=bob,ou=dsa,dc=coolinc,dc=com"
+#     redmine_ldap_account_password: bob42
+#     redmine_ldap_base_dn: "dc=coolinc,dc=com"
+#     redmine_ldap_attr_login: uid
+#     redmine_ldap_attr_firstname: givenName
+#     redmine_ldap_attr_lastname: sn
+#     redmine_ldap_attr_mail: mail
+#     redmine_ldap_attr_onthefly_register: true
+#     redmine_ldap_tls: true
+#     redmine_ldap_filter: ""
+redmine_ldap_configs: []
+
 # redmine inbound mail configuration
 # using the same logic as redmine_mail_pop3 but with project
 # example :

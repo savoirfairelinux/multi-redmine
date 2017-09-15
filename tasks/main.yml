@@ -3,10 +3,6 @@
   become_user: root
   become: true
 
-- include: tasks/database.yml
-  become_user: postgres
-  become: true
-
 - include: tasks/cron.yml
   become_user: "{{ redmine_username }}"
   become: true
@@ -26,3 +22,12 @@
 - include: tasks/config.yml
   become_user: "{{ redmine_username }}"
   become: true
+
+- include: tasks/database.yml
+  become_user: postgres
+  become: true
+
+- include: tasks/ldap_config.yml
+  become_user: "{{ redmine_username }}"
+  become: true
+  with_items: "{{ redmine_ldap_configs|default([]) }}"

@@ -1,0 +1,18 @@
+- name: Check for LDAP config in database
+  shell: |
+    psql {{ redmine_database_schema }} -h {{ redmine_database_host }} \
+    -p {{ redmine_database_port }} -U {{ redmine_database_username }} \
+    -A -t -c "SELECT count(*) FROM auth_sources WHERE name = '{{ item.redmine_ldap_name }}'"
+  environment:
+    PGPASSWORD: "{{ redmine_database_password }}"
+  register: had_ldap
+  changed_when: false
+
+- name: Add LDAP config to database
+  shell: |
+    psql {{ redmine_database_schema }} -h {{ redmine_database_host }} \
+    -p {{ redmine_database_port }} -U {{ redmine_database_username }} <<-EOF
+    {{ lookup("template", "ldap_config.sql.j2") }}
+  environment:
+    PGPASSWORD: "{{ redmine_database_password }}"
+  when: "had_ldap.stdout == '0'"
