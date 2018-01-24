@@ -16,7 +16,7 @@ Requirements
 * Ansible roles:
     * [puma-rbenv-nginx][ansible-puma-rbenv-nginx]
     * [gitpush-deploy][ansible-gitpush-deploy]
-    * [postgres-install][ansible-postgres-install]
+    * [postgresql][ansible-postgres-install]
 
 
 Usage example
@@ -45,5 +45,5 @@ Do not hesitate to join us and post comments, suggestions, questions and general
 
 
 [ansible-gitpush-deploy]: https://github.com/savoirfairelinux/ansible-gitpush-deploy
-[ansible-postgres-install]: https://github.com/savoirfairelinux/ansible-postgres-install
+[ansible-postgres-install]: https://github.com/ANXS/postgresql
 [ansible-puma-rbenv-nginx]: https://github.com/savoirfairelinux/ansible-puma-rbenv-nginx
