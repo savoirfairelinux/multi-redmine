@@ -26,3 +26,12 @@
   notify: restart appserver
   become_user: "{{ redmine_username }}"
   become: true
+
+- name: Migrate plugins schemas
+  shell: |
+    . {{ redmine_rbenv_activation_script }} && cd src &&
+    bin/rake redmine:plugins
+  environment:
+    RAILS_ENV: "{{ redmine_rails_environment }}"
+  become_user: "{{ redmine_username }}"
+  become: true
